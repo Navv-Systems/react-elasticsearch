@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import { toTermQueries } from "./utils";
 import { useSharedContext } from "./SharedContextProvider";
 
@@ -41,6 +41,9 @@ export default function({
     });
   }, [size, filterValue, value]);
 
+// Checks if widget value is the same as actual value.
+const isValueReady = useCallback(() => widgets.get(id)?.value ?? true === value, [id, value, widgets]);
+
   // If widget value was updated elsewhere (ex: from active filters deletion)
   // We have to update and dispatch the component.
   useEffect(() => {
@@ -50,10 +53,6 @@ export default function({
   // Destroy widget from context (remove from the list to unapply its effects)
   useEffect(() => () => dispatch({ type: "deleteWidget", key: id }), []);
 
-  // Checks if widget value is the same as actual value.
-  function isValueReady() {
-    return !widgets.get(id) || widgets.get(id).value == value;
-  }
 
   // On checkbox status change, add or remove current agg to selected
   function handleChange(item, checked) {
