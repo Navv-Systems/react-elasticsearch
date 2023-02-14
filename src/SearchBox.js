@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSharedContext } from "./SharedContextProvider";
 
-export default function({ customQuery, fields, id, initialValue, placeholder }) {
+export default function ({ customQuery, fields, id, initialValue, placeholder }) {
   const [{ widgets }, dispatch] = useSharedContext();
   const [value, setValue] = useState(initialValue || "");
 
@@ -9,6 +9,13 @@ export default function({ customQuery, fields, id, initialValue, placeholder }) 
   useEffect(() => {
     update(value);
   }, []);
+
+  // Update query if initialValue change.
+  useEffect(() => {
+    if (!initialValue) return;
+
+    update(initialValue);
+  }, [initialValue]);
 
   // If widget value was updated elsewhere (ex: from active filters deletion)
   // We have to update and dispatch the component.
@@ -41,7 +48,7 @@ export default function({ customQuery, fields, id, initialValue, placeholder }) 
       query: queryFromValue(v),
       value: v,
       configuration: null,
-      result: null
+      result: null,
     });
   }
 
@@ -58,7 +65,7 @@ export default function({ customQuery, fields, id, initialValue, placeholder }) 
       <input
         type="text"
         value={value}
-        onChange={e => update(e.target.value)}
+        onChange={(e) => update(e.target.value)}
         placeholder={placeholder || "search…"}
       />
     </div>
