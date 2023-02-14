@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import { toTermQueries } from "./utils";
 import { useSharedContext } from "./SharedContextProvider";
 
@@ -26,20 +26,27 @@ export default function({
   const total = (result && result.total) || 0;
 
   // Update widgets properties on state change.
-  useEffect(() => {
-    dispatch({
-      type: "setWidget",
-      key: id,
-      needsQuery: true,
-      needsConfiguration: true,
-      isFacet: true,
-      wantResults: false,
-      query: { bool: { should: toTermQueries(fields, value) } },
-      value,
-      configuration: { size, filterValue, fields, filterValueModifier },
-      result: data && total ? { data, total } : null
-    });
-  }, [size, filterValue, value]);
+   const updateWidget = useCallback(() => {
+      dispatch({
+        type: "setWidget",
+        key: id,
+        needsQuery: true,
+        needsConfiguration: true,
+        isFacet: true,
+        wantResults: false,
+        query: { bool: { should: toTermQueries(fields, value) } },
+        value,
+        configuration: { size, filterValue, fields, filterValueModifier },
+        result: data && total ? { data, total } : null
+      });
+    }, [dispatch, size, filterValue,value]);
+
+useEffect(() => {
+  updateWidget();
+}, [updateWidget]);
+
+// Checks if widget value is the same as actual value.
+const isValueReady = useCallback(() => widgets.get(id)?.value ?? true === value, [id, value, widgets]);
 
   // If widget value was updated elsewhere (ex: from active filters deletion)
   // We have to update and dispatch the component.
@@ -50,23 +57,21 @@ export default function({
   // Destroy widget from context (remove from the list to unapply its effects)
   useEffect(() => () => dispatch({ type: "deleteWidget", key: id }), []);
 
-  // Checks if widget value is the same as actual value.
-  function isValueReady() {
-    return !widgets.get(id) || widgets.get(id).value == value;
-  }
 
-  // On checkbox status change, add or remove current agg to selected
-  function handleChange(item, checked) {
+// On checkbox status change, add or remove current agg to selected
+   const handleChange=useCallback((item, checked)=>{
     const newValue = checked
       ? [...new Set([...value, item.key])]
       : value.filter(f => f !== item.key);
     setValue(newValue);
-  }
+
+  },[value])
 
   // Is current item checked?
-  function isChecked(item) {
+  const isChecked=useCallback((item)=> {
     return value.includes(item.key);
-  }
+  },[value])
+
 
   return (
     <div className="react-es-facet">
