@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSharedContext } from "./SharedContextProvider";
 
-export default function ({ customQuery, fields, id, initialValue, placeholder }) {
+export default function ({ customQuery, fields, id, initialValue, placeholder, clearButton }) {
   const [{ widgets }, dispatch] = useSharedContext();
   const [value, setValue] = useState(initialValue || "");
 
@@ -66,8 +66,18 @@ export default function ({ customQuery, fields, id, initialValue, placeholder })
         type="text"
         value={value}
         onChange={(e) => update(e.target.value)}
-        placeholder={placeholder || "search…"}
+        placeholder={placeholder || "Search…"}
       />
+      {clearButton &&
+        <button
+          class="clear"
+          onClick={() => {
+            update('')
+          }}
+        >
+          X
+        </button>
+      }
     </div>
   );
 }

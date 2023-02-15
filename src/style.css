@@ -26,3 +26,22 @@
 .react-es-facet > label {
   display: block;
 }
+
+.react-es-searchbox {
+  display: flex;
+}
+
+.react-es-searchbox input[type="text"] {
+  outline: none;
+  border-width: 1px;
+}
+
+.react-es-searchbox .clear {
+  border: none;
+  background-color: transparent;
+  margin-left: -20px;
+}
+
+.react-es-searchbox .clear:hover {
+  cursor: pointer;
+}
