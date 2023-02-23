@@ -7,7 +7,7 @@ export default function ({
   id,
   initialValue,
   placeholder,
-  clearButtonon,
+  clearButton,
   onClearSearch,
 }) {
   const [{ widgets }, dispatch] = useSharedContext();
