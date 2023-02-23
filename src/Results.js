@@ -4,19 +4,23 @@ import Pagination from "./Pagination";
 
 // Pagination, informations about results (like "30 results")
 // and size (number items per page) are customizable.
-export default function({ itemsPerPage, initialPage = 1, pagination, stats, items, id, sort }) {
+export default function ({ itemsPerPage, page = 1, setPage, pagination, stats, items, id, sort }) {
   const [{ widgets }, dispatch] = useSharedContext();
   const [initialization, setInitialization] = useState(true);
-  const [page, setPage] = useState(initialPage);
   const widget = widgets.get(id);
   const data = widget && widget.result && widget.result.data ? widget.result.data : [];
-  const total = widget && widget.result && widget.result.total ? (widget.result.total.hasOwnProperty('value') ? widget.result.total.value: widget.result.total) : 0;
+  const total =
+    widget && widget.result && widget.result.total
+      ? widget.result.total.hasOwnProperty("value")
+        ? widget.result.total.value
+        : widget.result.total
+      : 0;
   itemsPerPage = itemsPerPage || 10;
 
-  useEffect(() => {
-    setPage(initialization ? initialPage : 1);
-    return () => setInitialization(false);
-  }, [total]);
+  // useEffect(() => {
+  //   setPage(initialization ? page : 1);
+  //   return () => setInitialization(false);
+  // }, [total]);
 
   // Update context with page (and itemsPerPage)
   useEffect(() => {
@@ -30,7 +34,7 @@ export default function({ itemsPerPage, initialPage = 1, pagination, stats, item
       query: null,
       value: null,
       configuration: { itemsPerPage, page, sort },
-      result: data && total ? { data, total } : null
+      result: data && total ? { data, total } : null,
     });
   }, [page, sort]);
 
@@ -38,7 +42,12 @@ export default function({ itemsPerPage, initialPage = 1, pagination, stats, item
   useEffect(() => () => dispatch({ type: "deleteWidget", key: id }), []);
 
   const defaultPagination = () => (
-    <Pagination onChange={p => setPage(p)} total={total} itemsPerPage={itemsPerPage} page={page} />
+    <Pagination
+      onChange={(p) => setPage(p)}
+      total={total}
+      itemsPerPage={itemsPerPage}
+      page={page}
+    />
   );
 
   return (
