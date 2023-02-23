@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useSharedContext } from "./SharedContextProvider";
 
-export default function ({ customQuery, fields, id, initialValue, placeholder, clearButton }) {
+export default function ({
+  customQuery,
+  fields,
+  id,
+  initialValue,
+  placeholder,
+  clearButtonon,
+  onClearSearch,
+}) {
   const [{ widgets }, dispatch] = useSharedContext();
   const [value, setValue] = useState(initialValue || "");
 
@@ -73,6 +81,7 @@ export default function ({ customQuery, fields, id, initialValue, placeholder, c
           className="clear"
           onClick={() => {
             update("");
+            onClearSearch && onClearSearch();
           }}
         >
           <svg
