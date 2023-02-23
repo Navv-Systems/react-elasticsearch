@@ -75,7 +75,6 @@ export default function ({
         type="text"
         value={value}
         onChange={(e) => {
-          console.log("input change");
           pageChange && pageChange();
           update(e.target.value);
         }}
