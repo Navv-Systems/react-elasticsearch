@@ -9,7 +9,7 @@ export default function ({
   placeholder,
   clearButton,
   onClearSearch,
-  pageChange,
+  searchChange,
 }) {
   const [{ widgets }, dispatch] = useSharedContext();
   const [value, setValue] = useState(initialValue || "");
@@ -75,7 +75,7 @@ export default function ({
         type="text"
         value={value}
         onChange={(e) => {
-          pageChange && pageChange();
+          searchChange && searchChange(e.target.value);
           update(e.target.value);
         }}
         placeholder={placeholder || "Search…"}
