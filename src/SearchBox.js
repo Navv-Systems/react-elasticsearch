@@ -21,6 +21,8 @@ export default function ({
 
   // Update query if initialValue change.
   useEffect(() => {
+    if (initialValue === undefined || initialValue === null) return;
+
     update(initialValue);
   }, [initialValue]);
 
