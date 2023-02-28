@@ -30,7 +30,7 @@ export default function ({ itemsPerPage, page = 1, setPage, pagination, stats, i
       configuration: { itemsPerPage, page, sort },
       result: data && total ? { data, total } : null,
     });
-  }, [page, sort]);
+  }, [page, sort, itemsPerPage]);
 
   // Destroy widget from context (remove from the list to unapply its effects)
   useEffect(() => () => dispatch({ type: "deleteWidget", key: id }), []);
